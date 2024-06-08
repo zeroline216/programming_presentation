@@ -1,0 +1,837 @@
+import datetime
+
+Top_note = ["베르가못 (Bergamot)","오렌지 (Orange)","자몽 (Grapefruit)","네롤리 (Neroli)","라벤더 (Lavender)","시트러스 (Citruss)","애플 (Apple)","그레이프프루트 (Grapefruit)"] #8개
+Middle_note = ["페퍼 (Pepper)","펠리고늄 (Peligonium)","튤립 (Tulip)","아이리스 (Iris)","일랑일랑 (Ylangylang)","장미 (Rose)","자스민 (Jasmine)","라일락 (Lilac)","피오니 (Peony)"] #9개
+Base_note = ["바닐라 (Vanilla)","앰버 (Amber)","베티버 (Vetiver)","시더우드 (Cedarwood)","벤조인 (Benzoin)","파출리 (Patchouli)","화이트 머스크 (Whitemusk)"] #7개
+Base = ["알코올베이스","오일베이스"]
+
+
+class Perfume_vendingmachine:
+
+    def __init__(self):
+        self.price = 0
+        self.bottle_size = None
+        self.base = None
+        self.top_note = []
+        self.middle_note = []
+        self.base_note = []
+        self.method = None
+        self.select = None
+        self.age = None
+        self.reply = None
+        self.slot=0
+        self.top_note_stock = {"베르가못 (Bergamot)":20,"오렌지 (Orange)":20,"자몽 (Grapefruit)":20,"네롤리 (Neroli)":20,"라벤더 (Lavender)":20,"시트러스 (Citruss)":20,"애플 (Apple)":20,"그레이프프루트 (Grapefruit)":20} #8개
+        self.middle_note_stock = {"페퍼 (Pepper)":20,"펠리고늄 (Peligonium)":20,"튤립 (Tulip)":20,"아이리스 (Iris)":20,"일랑일랑 (Ylangylang)":20,"장미 (Rose)":20,"자스민 (Jasmine)":20,"라일락 (Lilac)":20,"피오니 (Peony)":20} #9개
+        self.base_note_stock = {"바닐라 (Vanilla)":20,"앰버 (Amber)":20,"베티버 (Vetiver)":20,"시더우드 (Cedarwood)":20,"벤조인 (Benzoin)":20,"파출리 (Patchouli)":20,"화이트 머스크 (Whitemusk)":20} #7개
+        self.base_stock = {"알코올베이스":20,"오일베이스":20}
+
+
+
+    #첫인사
+    def Welcome_message(self):
+
+        print("""
+
+
+
+                 _       __     __                             __
+                | |     / /__  / /________  ____ ___  ___     / /_____
+                | | /| / / _ \/ / ___/ __ \/ __ `__ \/ _ \   / __/ __ \
+
+                | |/ |/ /  __/ / /__/ /_/ / / / / / /  __/  / /_/ /_/ /
+                |__/|__/\___/_/\___/\____/_/ /_/ /_/\___/   \__/\____/
+
+                               ____  _    ____  ___
+                             \ ___ /| |  / /  |/  /
+                            / /     | | / / /|_/ /
+                           / /_ _   | |/ / /  / /
+                           \_____/  |___/_/  /_/
+
+
+                  ================================================
+                      Programming Fundamentals - Team 3 Project
+                  ================================================
+
+                   Welcome to the Custom Medicine Vending Machine
+        """)
+
+    #끝인사
+    def Goodbye_message(self):
+
+        print('''
+                 ________                __
+                /_  __/ /_  ____ _____  / /__
+                 / / / __ \/ __ `/ __ \/ //_/
+                / / / / / / /_/ / / / / ,<
+               /_/ /_/ /_/\__,_/_/ /_/_/|_|
+
+
+                      \ \/ /___  __  __
+                       \  / __ \/ / / /
+                       / / /_/ / /_/ /
+                      /_/\____/\__,_/
+
+
+       ===============================================
+          Programming Fundamentals - Team 3 Project
+       ===============================================
+
+            Custom Vending Muchine - Pufume Muchine
+
+           저희 서비스를 이용해 주셔서 감사합니다.
+
+
+        ''')
+
+
+    #향수 만드는 방식 선택
+    def Choose_perfume(self):
+        methods = ["추천목록","커스텀하기"]
+        while True:
+            self.method = int(input("어떤 방식으로 향수를 만들지 선택해 주세요.\n1.{}\n2.{}".format(methods[0],methods[1])))
+
+            if self.method == 1:
+                print("추천목록 기반으로 만들기를 선택하였습니다.")
+                break
+            elif self.method == 2:
+                print("커스텀하기를 선택하였습니다.")
+                break
+            else:
+                print("다시 확인하고 선택해주세요.")
+
+    #향수 용량 선택
+    def select_bottle_size(self):
+        sizes = ["30ml", "60ml"]
+        print("30ml의 가격은 2000원, 60ml의 가격은 3000원입니다.")
+        size = int(input(f"{sizes} 중에서 원하는 향수병의 용량을 선택해주세요: "))
+        self.bottle_size = sizes[size - 1]
+
+        if self.bottle_size == sizes[0]:
+            self.price = 0
+            print("30ml를 선택하였습니다.")
+            self.price += 2000
+        elif self.bottle_size == sizes[1]:
+            self.price = 0
+            print("60ml를 선택하였습니다.")
+            self.price += 3000
+
+    #성별 및 나이 입력
+    def information(self):
+        my_gender = input("당신의 성별을 입력해 주세요(남/녀) : ")
+        if my_gender == '남':
+            my_old = input("당신의 나이를 입력해주세요 : " )
+            if 0< int(my_old) < 30:
+                self.man_10()
+            elif int(my_old)>=30:
+                self.man_30()
+            else:
+                print("잘못 입력하셨습니다.")
+                self.information()
+
+        elif my_gender == "녀":
+            my_old = input("당신의 나이를 입력해주세요 : " )
+            if 0< int(my_old) < 30:
+                self.woman_10()
+            elif int(my_old)>=30:
+                self.woman_30()
+            else:
+                print("잘못 입력하셨습니다.")
+                self.information()
+        else:
+            print("잘못 입력하셨습니다")
+            self.information()
+
+    #남자 10대, 20대 추천 향수 목록
+    def man_10(self):
+        print("")
+        print("[질리지 않는 신선한 향]")
+        self.base = '알코올베이스'
+        self.top_note = ['베르가못 (Bergamot)']
+        self.middle_note = ['페퍼 (Pepper)']
+        self.base_note = ['바닐라 (Vanilla)','앰버 (Amber)']
+        print("","-"*46)
+        print("|  베이스: {}                        |".format(self.base))
+        print("|  탑 노트: {}                |".format(self.top_note[0]))
+        print("|  미들 노트: {}                    |".format(self.middle_note[0]))
+        print("|  베이스 노트: {},{}  |".format(self.base_note[0],self.base_note[1]))
+        print("","-"*46)
+        while True:
+            print("")
+            man_10_check = input("이것으로 정하시겠습니까?(Y/N) : ")
+            if man_10_check == "Y":
+                self.price += 12000
+                if self.bottle_size=="30ml":
+                    self.base_stock[self.base]-=1
+                else:
+                    self.base_stock[self.base]-=2
+                if self.base_stock[self.base]<0:
+                    self.slot="r1"
+                for tp in self.top_note:
+                    if self.bottle_size=="30ml":
+                        self.top_note_stock[tp]-=1
+                    else:
+                        self.top_note_stock[tp]-=2
+                    if self.top_note_stock[tp]<0:
+                        self.slot="r2"
+                for p in self.middle_note:
+                    if self.bottle_size=="30ml":
+                        self.middle_note_stock[p]-=1
+                    else:
+                        self.middle_note_stock[p]-=2
+                    if self.middle_note_stock[p]<0:
+                        self.slot="r3"
+                for bp in self.base_note:
+                    if self.bottle_size=="30ml":
+                        self.base_note_stock[bp]-=1
+                    else:
+                        self.base_note_stock[bp]-=2
+                    if self.base_note_stock[bp]<0:
+                        self.slot="r4"
+
+                self.reset_stocks()
+                self.mix_perfume()
+                self.box()
+                self.total_price()
+                self.payment_sys()
+                if self.slot=="r":
+                    self.run()
+                    break
+                else:
+                    break
+            elif man_10_check == 'N':
+                print("처음 화면으로 돌아갑니다.")
+                self.run()
+                break
+            else:
+                print("잘못된 정보입니다. 다시 입력해주세요")
+                continue
+
+    #남자 30대 이상 추천 향수 목록
+    def man_30(self):
+        print("")
+        print("[어른스럽고 남성적인 향]")
+        self.base = '오일베이스'
+        self.top_note = ['오렌지 (Orange)','자몽 (Grapefruit)']
+        self.middle_note = ['페퍼 (Pepper)','펠리고늄 (Peligonium)']
+        self.base_note = ['베티버 (Vetiver)','파출리 (Patchouli)',"시더우드 (Cedarwood)","벤조인 (Benzoin)"]
+        print('',"-"*96)
+        print("|  베이스: {}                                                                            |".format(self.base))
+        print("|  탑 노트: {},{}                                                    |".format(self.top_note[0],self.top_note[1]))
+        print("|  미들 노트: {},{}                                                |".format(self.middle_note[0],self.middle_note[1]))
+        print("|  베이스 노트: {},{},{},{}        |".format(self.base_note[0],self.base_note[1],self.base_note[2],self.base_note[3]))
+        print('',"-"*96)
+        while True:
+            print("")
+            man_10_check = input("이것으로 정하시겠습니까?(Y/N) : ")
+            if man_10_check == "Y":
+                self.price += 24000
+                if self.bottle_size=="30ml":
+                    self.base_stock[self.base]-=1
+                else:
+                    self.base_stock[self.base]-=2
+                if self.base_stock[self.base]<0:
+                    self.slot="r1"
+                for tp in self.top_note:
+                    if self.bottle_size=="30ml":
+                        self.top_note_stock[tp]-=1
+                    else:
+                        self.top_note_stock[tp]-=2
+                if self.top_note_stock[tp]<0:
+                    self.slot="r2"
+                for p in self.middle_note:
+                    if self.bottle_size=="30ml":
+                        self.middle_note_stock[p]-=1
+                    else:
+                        self.middle_note_stock[p]-=2
+                if self.middle_note_stock[p]<0:
+                    self.slot="r3"
+                for bp in self.base_note:
+                    if self.bottle_size=="30ml":
+                        self.base_note_stock[bp]-=1
+                    else:
+                        self.base_note_stock[bp]-=2
+                if self.base_note_stock[bp]<0:
+                    self.slot="r4"
+
+                self.reset_stocks()
+                self.mix_perfume()
+                self.box()
+                self.total_price()
+                self.payment_sys()
+                if self.slot=="r":
+                    self.run()
+                    break
+                else:
+                    break
+            elif man_10_check == 'N':
+                print("처음 화면으로 돌아갑니다.")
+                self.run()
+                break
+            else:
+                print("잘못된 정보입니다. 다시 입력해주세요")
+                continue
+
+
+
+    #여자 10대, 20대 추천 향수 목록
+    def woman_10(self):
+        print("")
+        print("상큼한 향")
+        print("","-"*91)
+        print('|  베이스: {}                                                                     |'.format(Base[0]))
+        print("|  탑 노트: {},{},{},{}           |".format(Top_note[0], Top_note[5], Top_note[6], Top_note[2]))
+        print("|  미들노트: {},{},{},{}                     |".format(Middle_note[5],Middle_note[6],Middle_note[7],Middle_note[8]))
+        print("|  베이스 노트: {},{},{}                        |".format(Base_note[1],Base_note[3],Base_note[5]))
+        print("","-"*91)
+        self.base=Base[0]
+        self.top_note.append(Top_note[0])
+        self.top_note.append(Top_note[5])
+        self.top_note.append(Top_note[6])
+        self.top_note.append(Top_note[2])
+        self.middle_note.append(Middle_note[5])
+        self.middle_note.append(Middle_note[6])
+        self.middle_note.append(Middle_note[7])
+        self.middle_note.append(Middle_note[8])
+        self.base_note.append(Base_note[1])
+        self.base_note.append(Base_note[3])
+        self.base_note.append(Base_note[5])
+        while True:
+            print("")
+            woman_10_check = input("이것으로 정하시겠습니까?(Y/N) : ")
+            if woman_10_check == "Y":
+                self.price += 24000
+                if self.bottle_size=="30ml":
+                    self.base_stock[self.base]-=1
+                else:
+                    self.base_stock[self.base]-=2
+                if self.base_stock[self.base]<0:
+                    self.slot="r1"
+                for tp in self.top_note:
+                    if self.bottle_size=="30ml":
+                        self.top_note_stock[tp]-=1
+                    else:
+                        self.top_note_stock[tp]-=2
+                if self.top_note_stock[tp]<0:
+                    self.slot="r2"
+                for p in self.middle_note:
+                    if self.bottle_size=="30ml":
+                        self.middle_note_stock[p]-=1
+                    else:
+                        self.middle_note_stock[p]-=2
+                if self.middle_note_stock[p]<0:
+                    self.slot="r3"
+                for bp in self.base_note:
+                    if self.bottle_size=="30ml":
+                        self.base_note_stock[bp]-=1
+                    else:
+                        self.base_note_stock[bp]-=2
+                if self.base_note_stock[bp]<0:
+                    self.slot="r4"
+                self.mix_perfume()
+                self.box()
+                self.total_price()
+                self.payment_sys()
+                if self.slot=="r":
+                    self.run()
+                    break
+                else:
+                    break
+            elif woman_10_check == 'N':
+                print("처음 화면으로 돌아갑니다.")
+                self.run()
+                break
+            else:
+                print("잘못된 정보입니다. 다시 입력해주세요")
+                continue
+
+
+
+    #여자 30대 이상 향수 추천 목록
+    def woman_30(self):
+        print("")
+        print("성숙하고 우아한 향")
+        print("","-"*71)
+        print("|  베이스: {}                                                   |".format(Base[1]))
+        print("|  탑 노트: {},{},{}            |".format(Top_note[0], Top_note[3], Top_note[6]))
+        print("|  미들노트: {},{},{}         |".format(Middle_note[2],Middle_note[3],Middle_note[4]))
+        print("|  베이스 노트: {},{},{} |".format(Base_note[0],Base_note[1],Base_note[6]))
+        print("","-"*71)
+        self.base = (Base[1])
+        self.top_note.append(Top_note[0])
+        self.top_note.append(Top_note[3])
+        self.top_note.append(Top_note[6])
+        self.middle_note.append(Middle_note[2])
+        self.middle_note.append(Middle_note[3])
+        self.middle_note.append(Middle_note[4])
+        self.base_note.append(Base_note[0])
+        self.base_note.append(Base_note[1])
+        self.base_note.append(Base_note[3])
+        while True:
+            print("")
+            woman_30_check = input("이것으로 정하시겠습니까?(Y/N) : ")
+            if woman_30_check == "Y":
+                self.price += 24000
+                if self.bottle_size=="30ml":
+                    self.base_stock[self.base]-=1
+                else:
+                    self.base_stock[self.base]-=2
+                if self.base_stock[self.base]<0:
+                    self.slot="r1"
+                for tp in self.top_note:
+                    if self.bottle_size=="30ml":
+                        self.top_note_stock[tp]-=1
+                    else:
+                        self.top_note_stock[tp]-=2
+                if self.top_note_stock[tp]<0:
+                    self.slot="r2"
+                for p in self.middle_note:
+                    if self.bottle_size=="30ml":
+                        self.middle_note_stock[p]-=1
+                    else:
+                        self.middle_note_stock[p]-=2
+                if self.middle_note_stock[p]<0:
+                    self.slot="r3"
+                for bp in self.base_note:
+                    if self.bottle_size=="30ml":
+                        self.base_note_stock[bp]-=1
+                    else:
+                        self.base_note_stock[bp]-=2
+                if self.base_note_stock[bp]<0:
+                    self.slot="r4"
+                self.mix_perfume()
+                self.box()
+                self.total_price()
+                self.payment_sys()
+                if self.slot=="r":
+                    self.run()
+                else:
+                    break
+            elif woman_30_check == 'N':
+                print("처음 화면으로 돌아갑니다.")
+                self.run()
+                break
+            else:
+                print("잘못된 정보입니다. 다시 입력해주세요")
+                continue
+
+
+
+
+
+
+        #커스텀 하기 선택했을 경우
+        ##베이스 선택
+    def select_base(self):
+        while True:
+            print("")
+            Base_select = int(input("원하는 베이스를 고르세요.\n1. 알코올베이스\n2. 오일 베이스"))
+            if Base_select == 1:
+                self.base = "알코올베이스"
+                print("알코올 베이스를 선택하였습니다.")
+                self.price += 2000
+                if self.bottle_size=="30ml":
+                    self.base_stock[self.base]-=1
+                else:
+                    self.base_stock[self.base]-=2
+                if self.base_stock[self.base]<0:
+                    self.slot="c1"
+                break
+            elif Base_select == 2:
+                self.base = "오일베이스"
+                print("오일 베이스를 선택하였습니다.")
+                self.price += 4000
+                if self.bottle_size=="30ml":
+                    self.base_stock[self.base]-=1
+                else:
+                    self.base_stock[self.base]-=2
+                if self.base_stock[self.base]<0:
+                    self.slot="c2"
+                break
+            else:
+                print("다시 확인하고 입력해 주세요.")
+        ##탑 노트 선택
+    def select_top_note(self):
+        print("가격은 선택한 노트 당 2500원씩 입니다.")
+        while True:
+            print("")
+            top_choice = int(input("원하는 탑 노트 향을 고르세요.\n1. 베르가못(Bergamot)  2. 오렌지(Orange)  3. 자몽(Grapefruit)  4. 네롤리(Neroli)  5. 라벤더(Lavender)  6. 시트러스(Citruss)  7. 애플(Apple)\n"))
+            if 1 <= top_choice <= len(Top_note):
+                if Top_note[top_choice-1] not in self.top_note:
+                    self.top_note.append(Top_note[top_choice - 1])
+                    self.price += 2500
+                    print(f"탑 노트: {self.top_note}")
+                else:
+                    print("이미 추가되었습니다. 다시 선택해주세요.")
+                    continue
+            else:
+                print("잘못된 번호입니다. 다시 선택해주세요.")
+                continue
+            reply = input("탑 노트를 추가로 담으시겠습니까?\n1. 예\n2. 아니오 : ")
+            if reply == "1":
+                continue
+            elif reply == '2':
+                for tp in self.top_note:
+                    if self.bottle_size=="30ml":
+                        self.top_note_stock[tp]-=1
+                    else:
+                        self.top_note_stock[tp]-=2
+                    if self.top_note_stock[tp]<0:
+                        self.slot="c3"
+                break
+            else:
+                print("잘못된 입력입니다. 다시 선택해주세요.")
+
+        ##미들 노트 선택
+    def select_middle_note(self):
+        while True:
+            print("")
+            middle_choice = int(input("원하는 미들 노트 향을 고르세요.\n1. 페퍼 (Pepper)  2. 펠리고늄 (Peligonium)  3. 튤립 (Tulip)  4. 아이리스 (Iris)  5. 일랑일랑 (Ylangylang)  6. 장미 (Rose)  7. 자스민 (Jasmine)  8. 라일락 (Lilac)  9. 피오니 (Peony)\n"))
+            if 1 <= middle_choice <= len(Middle_note):
+                if Middle_note[middle_choice-1] not in self.middle_note:
+                    self.middle_note.append(Middle_note[middle_choice - 1])
+                    self.price += 2500
+                    print(f"미들 노트: {self.middle_note}")
+                else:
+                    print("이미 추가되었습니다. 다시 선택해주세요.")
+                    continue
+            else:
+                print("잘못된 번호입니다. 다시 선택해주세요.")
+                continue
+            reply = input("미들 노트를 추가로 담으시겠습니까?\n1. 예\n2. 아니오 : ")
+            if reply == "1":
+                continue
+            elif reply == '2':
+                for p in self.middle_note:
+                    if self.bottle_size=="30ml":
+                        self.middle_note_stock[p]-=1
+                    else:
+                        self.middle_note_stock[p]-=2
+                    if self.middle_note_stock[p]<0:
+                        self.slot="c4"
+                break
+            else:
+                print("잘못된 입력입니다. 다시 선택해주세요.")
+
+
+        ##베이스 노트 선택
+    def select_base_note(self):
+        while True:
+            print("")
+            base_choice = int(input("원하는 베이스 노트 향을 고르세요.\n1. 바닐라 (Vanilla)  2. 앰버 (Amber)  3. 베티버 (Vetiver)  4. 시더우드 (Cedarwood)  5. 벤조인 (Benzoin)  6. 파출리 (Patchouli)  7. 화이트 머스크 (Whitemusk)\n"))
+            if 1 <= base_choice <= len(Base_note):
+                if Base_note[base_choice-1] not in self.base_note:
+                    self.base_note.append(Base_note[base_choice - 1])
+                    self.price += 2500
+                    print(f"베이스 노트: {self.base_note}")
+                else:
+                    print("이미 추가되었습니다. 다시 선택해주세요.")
+                    continue
+            else:
+                print("잘못된 번호입니다. 다시 선택해주세요.")
+                continue
+            reply = input("베이스 노트를 추가로 담으시겠습니까?\n1. 예\n2. 아니오 : ")
+            if reply == "1":
+                continue
+            elif reply == '2':
+                for bp in self.base_note:
+                    if self.bottle_size=="30ml":
+                      self.base_note_stock[bp]-=1
+                    else:
+                      self.base_note_stock[bp]-=2
+                    if self.base_note_stock[bp]<0:
+                        self.slot="c5"
+                break
+            else:
+                print("잘못된 입력입니다. 다시 선택해주세요.")
+
+        #향수 제조
+    def mix_perfume(self):
+        print("")
+        print("고르신 향수의 재료를 확인해주세요.\n베이스 = {}\n탑 노트 = {}\n미들 노트 = {}\n베이스 노트 = {}".format(self.base,self.top_note,self.middle_note,self.base_note))
+        print("향수를 제작하는 중 입니다.")
+
+
+        #박스포장
+    def box(self):
+        print("")
+        check_box=input('박스포장을 하시겠습니까?(Y/N)')
+        if check_box=='Y':
+            print('기본요금:500원')
+            self.price+=500
+            print("")
+            check_txt=input('문구를 추가하시겠습니까?(추가요금:100원)(Y/N)')
+            if check_txt == 'Y':
+                txt=input('문구를 입력해주세요: ')
+                self.price +=100
+            if check_txt=='N':
+                print('-'*50)
+        else:
+            print('-'*50)
+
+
+        #총합
+    def total_price(self):
+        print("")
+        print(f'총 금액은{self.price}입니다.')
+
+
+
+        #단계확인 절차
+    def check_point(self):
+        while True:
+            print("")
+            self.reply = int(input("다음 단계로 진행해도 되겠습니까?\n1. 예\n2. 아니오"))
+            if self.reply == 1:
+                print("다음 단계로 진행하겠습니다.")
+                break
+            elif self.reply == 2:
+                print("현재 단계를 다시 진행합니다.")
+                break
+            else:
+                print("다시 확인하고 입력해주세요.")
+
+    #추천목록 재고 재설정
+    def reset_stocks(self):
+        if self.slot == "r1":
+            for tp in self.top_note:
+                if self.bottle_size == "30ml":
+                    self.top_note_stock[tp] += 1
+                else:
+                    self.top_note_stock[tp] += 2
+            for p in self.middle_note:
+                if self.bottle_size == "30ml":
+                    self.middle_note_stock[p] += 1
+                else:
+                    self.middle_note_stock[p] += 2
+            for bp in self.base_note:
+                if self.bottle_size == "30ml":
+                    self.base_note_stock[bp] += 1
+                else:
+                    self.base_note_stock[bp] += 2
+        elif self.slot == "r2":
+            for p in self.middle_note:
+                if self.bottle_size == "30ml":
+                    self.middle_note_stock[p] += 1
+                else:
+                    self.middle_note_stock[p] += 2
+            for bp in self.base_note:
+                if self.bottle_size == "30ml":
+                    self.base_note_stock[bp] += 1
+                else:
+                    self.base_note_stock[bp] += 2
+        elif self.slot == "r3":
+            for bp in self.base_note:
+                if self.bottle_size == "30ml":
+                    self.base_note_stock[bp] += 1
+                else:
+                    self.base_note_stock[bp] += 2
+        elif self.slot == "r4":
+            if self.bottle_size == "30ml":
+                self.base_stock[self.base] += 1
+            else:
+                self.base_stock[self.base] += 2
+        if self.slot =="r1":
+            self.slot="r"
+        elif self.slot =="r2":
+            self.slot="r"
+        elif self.slot =="r3":
+            self.slot="r"
+        elif self.slot =="r4":
+            self.slot="r"
+
+    #커스텀 재고 재설정
+    def cos_reset_stocks(self):
+        if self.slot == "c1" or self.slot == "c2":
+                if self.bottle_size == "30ml":
+                    self.base_stock[self.base] += 1
+                else:
+                    self.base_stock[self.base] += 2
+        if self.slot == "c3":
+            for tp in self.top_note:
+                if self.bottle_size == "30ml":
+                    self.top_note_stock[tp] += 1
+                else:
+                    self.top_note_stock[tp] += 2
+        if self.slot == "c4":
+            for p in self.middle_note:
+                if self.bottle_size == "30ml":
+                    self.middle_note_stock[p] += 1
+                else:
+                    self.middle_note_stock[p] += 2
+        if self.slot == "c5":
+            for bp in self.base_note:
+                if self.bottle_size == "30ml":
+                    self.base_note_stock[bp] += 1
+                else:
+                    self.base_note_stock[bp] += 2
+        if self.slot =="c1" or self.slot=="c2":
+            self.slot="c"
+        elif self.slot =="c3":
+            self.slot="c"
+        elif self.slot =="c4":
+            self.slot="c"
+        elif self.slot =="c5":
+            self.slot="c"
+
+
+
+    #지불방식 선택
+    def payment_sys(self):
+      print("{}원 입니다.".format(self.price))
+      print("")
+      print("결제 수단을 선택해주세요.")
+      pay=input("1.신용카드,2.현금,3.페이:")
+
+      if pay=="1":
+        print("")
+        print("카드 투입에 카드를 넣어주세요.")
+        if self.slot=="r":
+            print("이 추천상품의 재료가 모두 소진되었습니다.")
+            print("반환:",self.price)
+
+        elif self.slot=="c":
+            print("재고가 모두 소진되어 만들 수 없습니다.")
+            print("반환:",self.price)
+        else:
+            print("{}원 카드 결제가 완료되었습니다.".format(self.price))
+            print("")
+            receipt=input("영수증을 출력 하시겠습니까? (Y/N)")
+            if receipt=="Y":
+                print("영수증")
+                d=datetime.datetime.now()
+                print("-"*60)
+                print("-"*25,"영수증","-"*27)
+                print("거래일자:",d.strftime("%Y-%m-%d"))
+                print(f"탑 노트: {self.top_note}")
+                print(f"미들 노트: {self.middle_note}")
+                print(f"베이스 노트: {self.base_note}")
+                print("거래구분: 일시불")
+                print("결제 금액:{}".format(self.price))
+                print("-"*60)
+
+
+      elif pay=="2":
+        Mny=0
+        print("")
+        while True:
+            def deposit_print():
+                if Mny>=self.price:
+                    print()
+
+                else:
+                    print("{}원 입금되었습니다. {}원 남았습니다.".format(Mny,self.price-Mny))
+            if Mny<self.price:
+                money=int(input("자판기에 현금을 넣어주세요.(1000,5000,10000원 권만 사용 가능합니다."))
+                if money==1000:
+                    Mny+=1000
+                    deposit_print()
+                elif money==5000:
+                    Mny+=5000
+                    deposit_print()
+                elif money==10000:
+                    Mny+=10000
+                    deposit_print()
+                else:
+                    print("1000,5000,10000원 권만 사용 가능합니다.")
+            else:
+                if self.slot=="r":
+                    print("이 추천상품의 재료가 모두 소진되었습니다.")
+                    print("반환:",Mny)
+                    break
+                elif self.slot=="c":
+                    print("재고가 모두 소진되어 만들 수 없습니다.")
+                    print("반환:",Mny)
+                    break
+                else:
+                    if Mny>=self.price:
+                        print("{}원 결제가 완료 되었습니다.".format(self.price))
+                        break
+
+        if self.slot=="r" or self.slot=="c":
+            pass
+        elif self.price!=Mny:
+            change=Mny-self.price
+            th=change//1000
+            change%=1000
+            f_hun=change//500
+            change%=500
+            o_hun=change//100
+            print("거스름돈:1000원:{} 500원:{} 100원:{}".format(th,f_hun,o_hun))
+        else:
+            pass
+
+      elif pay=="3":
+          print("")
+          print("카드 리더기에 대주세요.")
+          if self.slot=="r":
+              print("이 추천상품의 재료가 모두 소진되었습니다.")
+              print("반환:",self.price)
+
+          elif self.slot=="c":
+              print("재고가 모두 소진되어 만들 수 없습니다.")
+              print("반환:",self.price)
+          else:
+              print("결제가 완료 되었습니다.")
+
+
+    #자판기 운영
+    def run(self):
+        my_perfume = Perfume_vendingmachine()
+        self.Welcome_message()
+        self.slot=0
+        self.top_note = []
+        self.middle_note = []
+        self.base_note = []
+        self.Choose_perfume()
+        print("")
+
+        if self.method == 1:
+            while True:
+                self.select_bottle_size()
+                print("")
+                self.check_point()
+                if self.reply == 1:
+                    break
+                elif self.reply == 2:
+                    pass
+
+            print("")
+
+            while True:
+                self.information()
+                print("")
+                break
+
+
+
+        elif self.method == 2:
+            self. select_bottle_size()
+            print("")
+            self.select_base()
+            print("")
+            self.select_top_note()
+            print("")
+            self.select_middle_note()
+            print("")
+            self.select_base_note()
+            print("")
+
+            self.cos_reset_stocks()
+            self.mix_perfume()
+            self.box()
+            self.total_price()
+            self.payment_sys()
+            if self.slot=="r":
+                  self.run()
+
+
+        self.Goodbye_message()
+
+Perfume = Perfume_vendingmachine()
+
+while True:
+    m=input("자판기를 종료하고 싶다면 N을 누르세요")
+    if m=="N":
+        break
+    else:
+        Perfume.run()
